@@ -1,15 +1,26 @@
-import {useState} from "react" 
-import Bonus from './Bonus';
+import {useState, useEffect} from "react" 
+import {BonusMultiplicateur, BonusAutoClick} from './Bonus';
 
 function Hello({bonusList}) {
 
   const [multiplicateur, setMultiplicateur] = useState(1)
+  const [autoClickRate, setAutoClickRate] = useState(0)
+
   const [nbr, setNbr] = useState(0)
-  const [cout, setCout] = useState(10)
   const [opacity, setOpacity] = useState(0)
 
   const [size, setSize] = useState("300px")
   const [mousePos, setMousePos] = useState({clientX: 0, clientY: 0})
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setNbr((n) => n + autoClickRate) 
+    }, 1000);
+    return () => {
+      clearInterval(timer)
+    }
+  }, [autoClickRate])
+  
 
 
   function handleClick (e) {
@@ -34,7 +45,7 @@ function Hello({bonusList}) {
       </div>
       <br/>
       {bonusList.map((bonus, index) => (
-        <Bonus
+        <BonusMultiplicateur
           key={index}
           nom={bonus.name}
           price={bonus.price}
@@ -45,8 +56,10 @@ function Hello({bonusList}) {
           setMultiplicateur={setMultiplicateur}
         />
       ))}
+      <BonusAutoClick nbr={nbr} setNbr={setNbr} nom="bonus auto" price={5} setAutoClickRate={setAutoClickRate} autoClickRate={autoClickRate} bonus={2} />
       <h1>{nbr}</h1>
       <h4>{multiplicateur} cookies par clicks</h4>
+      <h4>{autoClickRate} cookies auto par secondes</h4>
     </>
   );
 }

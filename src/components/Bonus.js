@@ -1,18 +1,55 @@
-function Bonus({nom, price, bonus, setNbr, setMultiplicateur, nbr, multiplicateur}) {
+function Bonus({ onClick, children }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{ width: "50%", height: "100px", fontSize: "25px" }}
+    >
+      {children}
+    </button>
+  );
+}
 
-  function handleMultiplicateur() {
+function BonusMultiplicateur({
+  nom,
+  price,
+  bonus,
+  setNbr,
+  setMultiplicateur,
+  nbr,
+  multiplicateur,
+}) {
+
+  const handleMultiplicateur = () => {
     if (nbr >= price) {
-      const tmpMutplicateur = multiplicateur * bonus
-      setMultiplicateur(tmpMutplicateur)
-      setNbr(nbr - price)
+      const tmpMutplicateur = multiplicateur * bonus;
+      setMultiplicateur(tmpMutplicateur);
+      setNbr(nbr - price);
     }
   }
 
   return (
-      <button onClick={handleMultiplicateur} style={{width: "50%", height: "100px", fontSize:"25px"}}>
-        {nom} - {price} - bonus * {bonus}
-      </button>
+    <Bonus onClick={handleMultiplicateur}>
+      {nom} - {price} - bonus * {bonus}
+    </Bonus>
   );
 }
 
-export default Bonus
+
+function BonusAutoClick({bonus, nbr, setNbr,nom, price, autoClickRate, setAutoClickRate}) {
+
+  const handleAutoClick = () => {
+    if (nbr >= price) {
+      const tmpAutoClickRate = autoClickRate + bonus;
+      setAutoClickRate(tmpAutoClickRate);
+      setNbr(nbr - price);
+    }
+  }
+
+  return (
+    <Bonus onClick={handleAutoClick}>
+      {nom} - {price} -  {bonus} per seconds
+    </Bonus>
+  );
+}
+
+export { BonusMultiplicateur, BonusAutoClick };
