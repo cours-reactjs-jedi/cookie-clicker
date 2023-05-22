@@ -1,3 +1,5 @@
+import { useDispatch } from 'react-redux'
+import {buy, extra} from "../store/nbrStore"
 function Bonus({ onClick, children }) {
   return (
     <button
@@ -13,19 +15,11 @@ function BonusMultiplicateur({
   nom,
   price,
   bonus,
-  setNbr,
-  setMultiplicateur,
-  nbr,
-  multiplicateur,
 }) {
-
+  const dispatch = useDispatch()
   const handleMultiplicateur = () => {
-    if (nbr >= price) {
-      const tmpMutplicateur = multiplicateur * bonus;
-      setMultiplicateur(tmpMutplicateur);
-      setNbr(nbr - price);
-    }
-  }
+    dispatch(buy({price, multiplicateur: bonus}))
+  };
 
   return (
     <Bonus onClick={handleMultiplicateur}>
@@ -34,22 +28,35 @@ function BonusMultiplicateur({
   );
 }
 
-
-function BonusAutoClick({bonus, nbr, setNbr,nom, price, autoClickRate, setAutoClickRate}) {
-
+function BonusAutoClick({
+  bonus,
+  nom,
+  price,
+}) {
+  const dispatch = useDispatch()
   const handleAutoClick = () => {
-    if (nbr >= price) {
-      const tmpAutoClickRate = autoClickRate + bonus;
-      setAutoClickRate(tmpAutoClickRate);
-      setNbr(nbr - price);
-    }
-  }
+    dispatch(buy({price, autoClickRate: bonus}))
+  };
 
   return (
     <Bonus onClick={handleAutoClick}>
-      {nom} - {price} -  {bonus} per seconds
+      {nom} - {price} - {bonus} per seconds
     </Bonus>
   );
 }
 
-export { BonusMultiplicateur, BonusAutoClick };
+function BonusExtra({ nom,bonus, time,  }) {
+    const dispatch = useDispatch()
+  const handleExtra = () => {
+    dispatch(extra({extra: bonus}))
+
+  };
+
+  return (
+    <Bonus onClick={handleExtra}>
+      {nom} - bonus * {bonus} pendant {time} secondes
+    </Bonus>
+  );
+}
+
+export { BonusExtra, BonusAutoClick, BonusMultiplicateur };
